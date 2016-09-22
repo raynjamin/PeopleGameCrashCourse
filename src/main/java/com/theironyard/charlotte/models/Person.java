@@ -6,9 +6,9 @@ package com.theironyard.charlotte.models;
 public class Person {
     private static int lastId = 0;
     private int id;
-    private String username;
-    private String input;
-    private String output;
+    private String username = "";
+    private String input = "";
+    private String output = "";
     private boolean host;
     private boolean turn;
 
@@ -54,5 +54,11 @@ public class Person {
 
     public void setTurn(boolean turn) {
         this.turn = turn;
+    }
+
+    public void resetFields() {
+        setTurn(false);
+        setOutput("");
+        setInput("");
     }
 }

@@ -6,7 +6,9 @@ package com.theironyard.charlotte.models;
 public class Command {
     public enum CommandType {
         MESSAGE,
-        START_GAME
+        REGISTER,
+        START_GAME,
+        END_GAME
     }
 
     private Person actor;

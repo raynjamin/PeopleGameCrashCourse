@@ -3,7 +3,6 @@ package com.theironyard.charlotte.sockets;
 import com.google.gson.Gson;
 import com.theironyard.charlotte.models.Command;
 import com.theironyard.charlotte.models.Game;
-import com.theironyard.charlotte.models.Person;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -18,7 +17,6 @@ public class GameWebSocket {
 
     @OnWebSocketConnect
     public void connected(Session session) {
-        currentGame.setPlayer(session, new Person());
     }
 
     @OnWebSocketClose
@@ -30,10 +28,19 @@ public class GameWebSocket {
     public void message(Session session, String message) throws IOException {
         Command c = new Gson().fromJson(message, Command.class);
 
-        currentGame.setPlayer(session, c.getActor());
-
-        if (c.getActor().isHost() && c.getCommand() == Command.CommandType.START_GAME) {
-            currentGame.startGame();
+        switch (c.getCommand()) {
+            case REGISTER:
+                currentGame.setPlayer(session, c.getActor());
+                break;
+            case START_GAME:
+                currentGame.startGame(c.getActor());
+                break;
+            case END_GAME:
+                 currentGame.endGame();
+                break;
+            case MESSAGE:
+                currentGame.receiveMessage(session, message);
+                break;
         }
     }
 }

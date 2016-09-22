@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,20 +21,61 @@ public class Game {
         return players.values().stream().collect(Collectors.toList());
     }
 
+    public void changeTurn(Person a, Person b, String message) {
+        a.setOutput(message);
+        a.setTurn(false);
+
+        if (b != null) {
+            b.setInput(message);
+            b.setTurn(true);
+        }
+    }
+
+    public void receiveMessage(Session session, String message) {
+        Iterator<Map.Entry<Session, Person>> iter = players.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<Session, Person> current = iter.next();
+
+            if (current.getKey().equals(session)) {
+                Map.Entry<Session, Person> nextGuy = null;
+
+                if (iter.hasNext()) {
+                    nextGuy = iter.next();
+                }
+
+                changeTurn(current.getValue(), nextGuy.getValue(), message);
+                break;
+            }
+        }
+
+        broadcastGameStatus();
+    }
+
+    public void endGame() {
+        players.values().forEach(p -> {
+            p.resetFields();
+        });
+
+        broadcastGameStatus();
+    }
+
     public void setPlayer(Session session, Person player) {
         players.put(session, player);
 
         broadcastGameStatus();
     }
 
-    public void startGame() {
-        Optional<Person> person = players.values().stream().filter(p -> !p.isTurn() && !p.isHost()).findFirst();
+    public void startGame(Person actor) {
+        if (actor.isHost()) {
+            Optional<Person> person = players.values().stream().filter(p -> !p.isTurn() && !p.isHost()).findFirst();
 
-        if (person.isPresent()) {
-            person.get().setTurn(true);
+            if (person.isPresent()) {
+                person.get().setTurn(true);
+            }
+
+            broadcastGameStatus();
         }
-
-        broadcastGameStatus();
     }
 
     private void broadcastGameStatus() {
