@@ -21,6 +21,10 @@ public class Game {
         return players.values().stream().collect(Collectors.toList());
     }
 
+    public void removePlayer(Session session) {
+        players.remove(session);
+    }
+
     public void changeTurn(Person a, Person b, String message) {
         if (a.isTurn()) {
             a.setOutput(message);
