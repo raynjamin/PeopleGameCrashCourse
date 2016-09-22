@@ -1,3 +1,4 @@
 .ENV
 target/
 .idea/workspace.xml
+.idea/libraries/*

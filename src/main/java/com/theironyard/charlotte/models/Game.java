@@ -5,15 +5,16 @@ import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
  * Created by Ben on 9/21/16.
  */
 public class Game {
-    private ConcurrentSkipListMap<Session, Person> players = new ConcurrentSkipListMap<>();
+    private Map<Session, Person> players = new ConcurrentHashMap<>();
 
     public List<Person> playerStatus() {
         return players.values().stream().collect(Collectors.toList());
