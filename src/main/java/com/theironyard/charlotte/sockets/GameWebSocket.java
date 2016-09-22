@@ -22,6 +22,7 @@ public class GameWebSocket {
     @OnWebSocketClose
     public void closed(Session session, int statusCode, String reason) {
         // deal with this later
+        currentGame.removePlayer(session);
     }
 
     @OnWebSocketMessage
