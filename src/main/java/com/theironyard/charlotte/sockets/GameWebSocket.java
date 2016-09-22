@@ -26,6 +26,8 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
+        System.out.printf("Received Message: %s\n", message);
+
         Command c = new Gson().fromJson(message, Command.class);
 
         switch (c.getCommand()) {
