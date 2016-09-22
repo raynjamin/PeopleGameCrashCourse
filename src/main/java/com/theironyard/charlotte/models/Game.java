@@ -42,8 +42,13 @@ public class Game {
             if (current.getKey().equals(session)) {
                 Map.Entry<Session, Person> nextGuy = null;
 
-                if (iter.hasNext()) {
-                    nextGuy = iter.next();
+                while (iter.hasNext()) {
+                    Map.Entry<Session, Person> temp = iter.next();
+
+                    if (!temp.getValue().isHost()) {
+                        nextGuy = temp;
+                        break;
+                    }
                 }
 
                 changeTurn(current.getValue(), nextGuy.getValue(), message);
@@ -73,6 +78,7 @@ public class Game {
             Optional<Person> person = players.values().stream().filter(p -> !p.isTurn() && !p.isHost()).findFirst();
 
             if (person.isPresent()) {
+                person.get().setInput(actor.getOutput());
                 person.get().setTurn(true);
             }
 
