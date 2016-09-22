@@ -22,12 +22,14 @@ public class Game {
     }
 
     public void changeTurn(Person a, Person b, String message) {
-        a.setOutput(message);
-        a.setTurn(false);
+        if (a.isTurn()) {
+            a.setOutput(message);
+            a.setTurn(false);
 
-        if (b != null) {
-            b.setInput(message);
-            b.setTurn(true);
+            if (b != null) {
+                b.setInput(message);
+                b.setTurn(true);
+            }
         }
     }
 
